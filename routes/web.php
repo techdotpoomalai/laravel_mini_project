@@ -15,3 +15,10 @@ Route::post('signin', [UserController::class,'signin'] )->name('signindata');
 
 Route::get('user_list', [UserController::class,'user_view'] )->name('userpage');
 
+Route::get('user_edit/{id}', [UserController::class,'update_view'] )->name('usereditpage');
+
+Route::put('edite/{id}', [UserController::class,'update'])->name('updatedata');
+
+Route::delete('delete/{id}',[UserController::class,'delete'] )->name('deleteuser');
+
+

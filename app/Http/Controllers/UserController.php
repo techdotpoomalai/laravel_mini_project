@@ -6,19 +6,16 @@ use Illuminate\Http\Request;
 use App\Models\userloginmodel;
 use App\Models\usermodel;
 
-class UserController extends Controller
-{
+class UserController extends Controller{
     public function home(Request $request){
         return view('home');
     }
     public function signin_view(Request $request){ 
         return view('signin');
     }
-
     public function signup_view(Request $request){
         return view('signup');
     }
-
     public function signin(Request $request){
         $username = $request->username; // Get email from request
         if (Usermodel::where('email', $username)->exists()) {
@@ -37,7 +34,6 @@ class UserController extends Controller
 
         
     }
-
     public function signup(Request $request){
         $user = new usermodel();
         $user->name = $request->name;
@@ -56,7 +52,33 @@ class UserController extends Controller
         $users = Usermodel::all();
         return view('user_list', ['users' => $users]);
     }
-    public function logout(Request $request){
-
+    public function update_view(Request $request,$id){
+        $userdata = Usermodel::find($id);
+        if (!$userdata) {
+            return redirect()->route('userpage')->with('error','User not there');
+        }else{
+            return view('update', ['user'=> $userdata]);
+        }
+    }
+    public function update(Request $request,$id){
+        $userdata = Usermodel::find($id);
+        if (!$userdata) {
+            return redirect()->route('usereditpage')->with('error','User not there');
+        }else{
+            $userdata->name = $request->name;
+            $userdata->number = $request->number;
+            $userdata->email = $request->email;
+            $userdata->password = $request->password;
+            $userdata->save();
+            return redirect()->route('userpage')->with('success','User edite successfully...!');;
+        }
+    }
+    public function delete(Request $request,$id){
+        $user = Usermodel::find($id);
+        if (!$user) {
+            return redirect()->route('userlist')->with('error', 'User not found!');
+        }
+        $user->delete();
+        return redirect()->route('userlist')->with('success', 'User deleted successfully!');
     }
 }
